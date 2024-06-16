@@ -25,10 +25,11 @@ export default function Header() {
   return (
     <Navbar className="bg-[#1D1D03] text-[#F5F5F5] ">
       <Link to="/" className="">
-        <img className="w-24" src="../../images/cafeytinta.png" alt="" />
+      <img className="hidden lg:block w-20 m-1" src="../../images/cafeytinta.png" alt="" />
+        <img className="lg:hidden sm:block w-20 m-2" src="../../images/cafeytinta2.png" alt="" />
       </Link>
       <form>
-        <div className="hidden lg:flex flex-row bg-white rounded-lg focus-within:border-4 focus-within:border-[#A0C4FF] text-black">
+        <div className="hidden lg:flex flex-row bg-white rounded-lg border-2 focus-within:border-2 focus-within:border-[#A0C4FF] text-black">
           <input
             type="text"
             placeholder="Buscar..."
