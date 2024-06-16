@@ -1,6 +1,7 @@
 import { Alert, Label, Spinner } from 'flowbite-react';
 import React, { useState } from 'react';
 import { Link , useNavigate} from 'react-router-dom';
+import "../custom.css"
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
@@ -42,7 +43,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className='min-h-screen bg-[#F7F5E8] pt-40'>
+    <div className='min-h-screen  pt-40'>
       <div className="flex p-3 max-w-5xl mx-auto flex-col md:flex-row md:items-center gap-5">
         {/* left side */}
         <div className='flex-1'>
@@ -92,8 +93,7 @@ export default function SignUp() {
             <button
               type="submit"
               className='mt-5 rounded-lg h-10 text-white bg-[#1D1D03] text-lg font-semibold transition-all duration-300 hover:bg-black hover:text-white' 
-              disabled={loading}
-            >
+              disabled={loading}>
               {loading ? (
                 <>
                 <Spinner size='sm' />

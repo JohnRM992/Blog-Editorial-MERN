@@ -54,7 +54,7 @@ export default function FooterComponent() {
                 </div>
             </div>
             {/* DERECHOS */}
-        <div className="text-center border-t-2 border-[#F7F5E8] p-5">Café y tinta - Todos los derechos reservados</div>
+        <div className="text-center border-t-2 border-t-[#F7F5E8] p-5">Café y tinta - Todos los derechos reservados</div>
         </div>
         
     </footer>
