@@ -108,7 +108,7 @@ export default function SignUp() {
           <div className="text-lg flex gap-2 mt-5">
             <span>¿Tienes una cuenta?</span>
             <Link to="/sign-in" className="text-blue-500 ml-1" >
-           Registrarse
+           Login
             </Link>
           </div>
           {
