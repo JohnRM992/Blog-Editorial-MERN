@@ -4,6 +4,7 @@ import { Link , useNavigate} from 'react-router-dom';
 import "../custom.css"
 import { useDispatch , useSelector } from 'react-redux';
 import { signInStart , signInSuccess ,signInFailure } from '../redux/user/userSlice';
+import OAuth from '../components/OAuth';
 
 
 export default function SignIn() {
@@ -98,6 +99,7 @@ export default function SignIn() {
                 'Login'
               )}
             </button>
+            <OAuth />
           </form>
 
           <div className="text-lg flex gap-2 mt-5">

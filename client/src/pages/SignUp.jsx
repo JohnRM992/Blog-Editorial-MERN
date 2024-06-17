@@ -2,6 +2,7 @@ import { Alert, Label, Spinner } from 'flowbite-react';
 import React, { useState } from 'react';
 import { Link , useNavigate} from 'react-router-dom';
 import "../custom.css"
+import OAuth from '../components/OAuth';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
@@ -103,6 +104,7 @@ export default function SignUp() {
                 'Registrarse'
               )}
             </button>
+            <OAuth />
           </form>
 
           <div className="text-lg flex gap-2 mt-5">
