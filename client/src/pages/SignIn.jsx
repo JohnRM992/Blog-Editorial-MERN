@@ -53,12 +53,12 @@ export default function SignIn() {
       <div className="flex p-3 max-w-5xl mx-auto flex-col md:flex-row md:items-center gap-5">
         {/* left side */}
         <div className='flex-1'>
-          <img className="sm:w-full md:w-96 lg:w-full" src="../../images/cafeytinta_black2.png" alt="" />
+          <img className="sm:w-full md:w-96 lg:w-96 " src="../../images/cafeytinta_black2.png" alt="" />
           <p className='mb-2 text-center text-lg font-semibold'>Inicio de sesión</p>
         </div>
 
         {/* right side */}
-        <div className="flex-1 lg:mr-5 h-full">
+        <div className="flex-1 lg:mr-5 h-96">
           <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
          
 
@@ -102,7 +102,7 @@ export default function SignIn() {
             <OAuth />
           </form>
 
-          <div className="text-lg flex gap-2 mt-5">
+          <div className="text-lg font-medium   mt-5 text-center">
             <span>¿No tienes una cuenta?</span>
             <Link to="/sign-up" className="text-blue-500 ml-1" >
            Registrarse
@@ -110,9 +110,9 @@ export default function SignIn() {
           </div>
           {
             errorMessage && (
-              <Alert className='' color='failure'>
-                {errorMessage}
-              </Alert>
+              <p className="text-red-600 font-medium pl-3 pt-3">
+                *{errorMessage}
+              </p>
             )
           }
         </div>
