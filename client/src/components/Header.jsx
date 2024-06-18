@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
-import { HiArrowRight, HiChevronDown } from 'react-icons/hi';
-import { Navbar , MegaMenu } from "flowbite-react";
+import {  HiChevronDown } from 'react-icons/hi';
+import { Navbar , MegaMenu, Avatar, Dropdown } from "flowbite-react";
+import {useSelector} from 'react-redux';
 import "../custom.css"
 
 export default function Header() {
   const path = useLocation().pathname;
+  const {currentUser} = useSelector(state => state.user)
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
@@ -48,14 +51,37 @@ export default function Header() {
           <AiOutlineSearch />
         </button>
 
-        <Link to="sign-in">
-          <button className="hidden lg:block transition-all duration-300 lg:hover:bg-[#F7F5E8] w-16 h-10 rounded-full lg:hover:text-[#1D1D03] mx-1 ">
-            Login
-          </button>
-          <button className="lg:hidden border-2 border-[#F7F5E8] transition-all duration-300 lg:hover:bg-[#F7F5E8] w-16 h-10 rounded-full lg:hover:text-[#1D1D03] focus:bg-[#F7F5E8] focus:text-[#1D1D03]">
-            Login
-          </button>
-        </Link>
+        {currentUser ? (
+              <Dropdown
+                
+                arrowIcon={false}
+                inline
+                label={
+                  <Avatar 
+                  alt='user'
+                  className="pl-3"
+                  img={currentUser.profilePicture}
+                  rounded
+                  />
+                }
+                >
+                  <Dropdown.Header>
+                    <span>{currentUser.username}</span>
+                  </Dropdown.Header>
+          </Dropdown>
+        ) : (
+            <Link to="sign-in">
+            <button className="hidden lg:block transition-all duration-300 lg:hover:bg-[#F7F5E8] w-16 h-10 rounded-full lg:hover:text-[#1D1D03] mx-1 ">
+              Login
+            </button>
+            <button className="lg:hidden border-2 border-[#F7F5E8] transition-all duration-300 lg:hover:bg-[#F7F5E8] w-16 h-10 rounded-full lg:hover:text-[#1D1D03] focus:bg-[#F7F5E8] focus:text-[#1D1D03]">
+              Login
+            </button>
+          </Link>
+          
+        )
+      }
+        
         <Navbar.Toggle className="text-white focus:text-[#1D1D03] rounded-full" />
       </div>
       <Navbar.Collapse>
@@ -80,9 +106,18 @@ export default function Header() {
                 Servicios 
               </button>
               <div id="myDropdown" className={`dropdown-content ${dropdownOpen ? 'show' : ''}`}>
-                <p className="rounded-tl-lg rounded-tr-lg hover:bg-[#1D1D03] hover:text-white">Servicio 1</p>
-                <p className=" hover:bg-[#1D1D03] hover:text-white" >Servicio 2</p>
-                <p className="rounded-br-lg rounded-bl-lg hover:bg-[#1D1D03] hover:text-white">Servicio 3</p>
+                <div className="flex flex-row">
+                <div className="min-w-40 text-center ">
+                <p className="pt-1 pb-1 transition-all duration-300 rounded-tl-lg hover:bg-[#1D1D03] hover:text-white">Servicio 1</p>
+                <p className="pt-1 pb-1 transition-all duration-300 hover:bg-[#1D1D03] hover:text-white" >Servicio 2</p>
+                <p className="pt-1 pb-1 transition-all duration-300 rounded-bl-lg hover:bg-[#1D1D03] hover:text-white">Servicio 3</p>
+                </div>
+                <div className="min-w-40 text-center">
+                <p className="pt-1 pb-1 transition-all duration-300 rounded-tr-lg hover:bg-[#1D1D03] hover:text-white">Servicio 4</p>
+                <p className="pt-1 pb-1 transition-all duration-300 hover:bg-[#1D1D03] hover:text-white" >Servicio 5</p>
+                <p className="pt-1 pb-1 transition-all duration-300 rounded-br-lg hover:bg-[#1D1D03] hover:text-white">Servicio 6</p>
+                </div>
+                </div>
               </div>
             </div>
 
