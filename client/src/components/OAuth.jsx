@@ -36,7 +36,7 @@ export default function OAuth() {
             } 
             
         } catch (error) {
-            console.error('Error during Google sign in:', error);
+            console.error('Error al inciar sesión con Google:', error);
         }
     };
 
