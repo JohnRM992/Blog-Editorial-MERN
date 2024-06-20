@@ -11,13 +11,10 @@ export const MenuMobile = () => {
 
   return (
     <>
-      <button
-        onClick={toggle}
-        
-      >
+      <button onClick={toggle}>
         <div className='sm:flex lg:hidden'>
-       <GiHamburgerMenu className='h-16 w-10 text-[#F7F5E8] '/>
-       </div>
+          <GiHamburgerMenu className='h-16 w-10 text-[#F7F5E8]' />
+        </div>
       </button>
       <Menu open={open}>
         <button
@@ -27,55 +24,41 @@ export const MenuMobile = () => {
         >
           &times;
         </button>
-        
-        <MenuContainer>
-            
 
-        <Link to="/" onClick={toggle}>
-          <MenuItem >
-          <p className="bg-[#F7F5E8] text-black w-full h-10 active:text-black active:rounded-md">Inicio</p>
-          </MenuItem>
+        <MenuContainer>
+          <Link to="/" onClick={toggle}>
+            <MenuItem>
+              <p className="bg-[#F7F5E8] text-black w-full h-10 active:text-black active:rounded-md">Inicio</p>
+            </MenuItem>
           </Link>
 
           <Link to="/about" onClick={toggle}>
-          <MenuItem >
-          <p className="bg-[#F7F5E8] text-black w-full h-10 active:text-black active:rounded-md">Nosotros</p>
-          </MenuItem>
+            <MenuItem>
+              <p className="bg-[#F7F5E8] text-black w-full h-10 active:text-black active:rounded-md">Nosotros</p>
+            </MenuItem>
           </Link>
-          
+
           <MenuItem>
-          <p className="bg-[#F7F5E8] text-black w-full h-10 active:text-black active:rounded-md">
-            Servicios
-          </p>
-          <div className='flex justify-center mt-3'>
-            <div className=''>
-
-          <p className='text-2xl '>Traducción</p>
-
-          <p className='text-2xl mt-2'>Redacción</p>
-
-          <p className='text-2xl mt-2'>Diseño grafico</p>
-
-          <p className='text-2xl mt-2'>Servicio 4</p>
-
-          <p className='text-2xl mt-2'>Servicio 5</p>
-
-          </div>
-          
-          </div>
+            <p className="bg-[#F7F5E8] text-black w-full h-10 active:text-black active:rounded-md">
+              Servicios
+            </p>
+            <div className='flex justify-center mt-3'>
+              <div>
+                <p className='text-2xl'>Traducción</p>
+                <p className='text-2xl mt-2'>Redacción</p>
+                <p className='text-2xl mt-2'>Diseño gráfico</p>
+                <p className='text-2xl mt-2'>Servicio 4</p>
+                <p className='text-2xl mt-2'>Servicio 5</p>
+              </div>
+            </div>
           </MenuItem>
-         
-
-        
-
-          {/* <MenuItem >Components</MenuItem> */}
         </MenuContainer>
       </Menu>
     </>
   );
 };
 
-/* Logic*/
+/* Logic */
 const style = {
   container: `relative top-1/4 w-full text-center mt-8`,
   item: `text-3xl text-white cursor-pointer hover:text-white`,
@@ -88,10 +71,7 @@ const style = {
 
 function Menu({ children, open }) {
   return (
-    <div
-      className={`${style.menu.default} 
-       ${open ? style.menu.open : style.menu.close}`}
-    >
+    <div className={`${style.menu.default} ${open ? style.menu.open : style.menu.close}`}>
       {children}
     </div>
   );
@@ -104,9 +84,13 @@ function MenuContainer({ children }) {
 function MenuItem({ children, href }) {
   return (
     <div className="p-2">
-      <a href={href} className={style.item}>
-        {children}
-      </a>
+      {href ? (
+        <a href={href} className={style.item}>
+          {children}
+        </a>
+      ) : (
+        <div className={style.item}>{children}</div>
+      )}
     </div>
   );
 }

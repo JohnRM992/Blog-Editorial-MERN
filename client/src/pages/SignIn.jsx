@@ -1,9 +1,9 @@
 import { Alert, Label, Spinner } from 'flowbite-react';
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { Link , useNavigate} from 'react-router-dom';
 import "../custom.css"
 import { useDispatch , useSelector } from 'react-redux';
-import { signInStart , signInSuccess ,signInFailure } from '../redux/user/userSlice';
+import { signInStart , signInSuccess ,signInFailure , clearError } from '../redux/user/userSlice';
 import OAuth from '../components/OAuth';
 
 
@@ -14,6 +14,17 @@ export default function SignIn() {
   const {loading, error: errorMessage} = useSelector(state => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Limpiar el error cuando el componente se monte
+    dispatch(clearError());
+
+    // Limpiar el error cuando el componente se desmonte
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch]);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });

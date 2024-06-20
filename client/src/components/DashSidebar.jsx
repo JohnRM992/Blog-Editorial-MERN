@@ -17,7 +17,7 @@ export default function DashSidebar() {
 
   return (
     <div className="w-full md:w-60  ">
-      <Link to="/dashboard?tab=profile">
+      <Link to="/dashboard?tab=profile" as='div'>
         <button className="rounded-md flex pl-5 pt-3 text-[1D1D03] bg-[#F7F5E8] w-11/12 h-14 mt-5 ml-4 md:ml-2.5   focus:border-black focus:border-2">
           <FaUserCircle className="w-8 h-8" />
           <p className="font-medium pt-1">Perfil</p>
