@@ -1,3 +1,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+body{
+    height:100vh;
+}
+
+.ql-editor{
+    border: 2px solid #1D1D03;
+    font-size: 18px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    background-color: white;
+}
+.ql-toolbar.ql-snow{
+    border: 2px solid #1D1D03;
+    /* border-top-left-radius: 7px;
+    border-top-right-radius: 7px; */
+    border-radius: 7px;
+    margin-bottom: 3px;
+   
+}
+
+.ql-snow{
+    border-radius: 7px;
+}
+
+.ql-container{
+    
+  
+}

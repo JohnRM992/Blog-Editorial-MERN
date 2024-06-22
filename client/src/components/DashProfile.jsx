@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Label, Modal } from "flowbite-react";
 import { CircularProgressbar } from "react-circular-progressbar";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { Link } from "react-router-dom";
 import "react-circular-progressbar/dist/styles.css";
 import {
   getDownloadURL,
@@ -23,7 +24,7 @@ import {
 
 export default function DashProfile() {
   const dispatch = useDispatch();
-  const { currentUser , error} = useSelector((state) => state.user);
+  const { currentUser , error , loading } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -197,6 +198,8 @@ export default function DashProfile() {
           onChange={handleImageChange}
           ref={filePickerRef}
           hidden
+           disabled={!isEditing}
+             
         />
         <div
           className="relative w-32 h-32 self-center cursor-pointer shadow-lg overflow-hidden rounded-full"
@@ -204,6 +207,7 @@ export default function DashProfile() {
         >
           {imageFileUploadProgress && (
             <CircularProgressbar
+             
               value={imageFileUploadProgress || 0}
               text={`${imageFileUploadProgress}`}
               strokeWidth={5}
@@ -228,7 +232,8 @@ export default function DashProfile() {
           <img
             src={imageFileUrl || currentUser.profilePicture}
             alt="Usuario"
-            className={`rounded-full w-full h-full object-cover border-8 ${
+            
+            className={` rounded-full w-full h-full object-cover border-8 ${
               imageFileUploadProgress &&
               imageFileUploadProgress < 100 &&
               "opacity-50"
@@ -289,10 +294,17 @@ export default function DashProfile() {
         <button
           type="submit"
           className="mt-5 rounded-lg h-10 text-white bg-[#1D1D03] text-lg font-semibold transition-all duration-300 hover:bg-black hover:text-white disabled:opacity-50"
-          disabled={imageFileUploading}
+          disabled={imageFileUploading || loading}
         >
           {isEditing ? "Actualizar" : "Editar"}
         </button>
+        {
+          currentUser.isAdmin && (
+            <Link to={'/create-post'}>
+            <button type="button" className="w-full mt-2 rounded-lg h-10 text-white bg-[#1D1D03] text-lg font-semibold transition-all duration-300 hover:bg-black hover:text-white disabled:opacity-50">Crear post</button>
+            </Link>
+          )
+        }
       </form>
 
       <div className="text-red-500 font-medium flex justify-between mt-5">
