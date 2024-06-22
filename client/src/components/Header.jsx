@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
-import { HiChevronDown } from "react-icons/hi";
-import { Navbar, MegaMenu } from "flowbite-react";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { useSelector } from "react-redux";
+// import { HiChevronDown } from "react-icons/hi";
+// import { Navbar, MegaMenu } from "flowbite-react";
+// import { GiHamburgerMenu } from "react-icons/gi";
 // import { slide as Menu } from "react-burger-menu";
+import { useSelector } from "react-redux";
+import { logoutSuccess } from "../redux/user/userSlice";
+import { useDispatch } from "react-redux";
+
 import "../custom.css";
-import MenuMobile from './MenuMobile'
+import MenuMobile from "./MenuMobile";
 
 export default function Header() {
   // const path = useLocation().pathname;
   const { currentUser } = useSelector((state) => state.user);
-
+  const dispatch = useDispatch();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownOpen2, setDropdownOpen2] = useState(false);
 
@@ -38,6 +41,24 @@ export default function Header() {
     setDropdownOpen2(!dropdownOpen2);
     setDropdownOpen(false);
   };
+
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(logoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <nav className="h-full bg-[#1D1D03] ">
       <div className="flex flex-row justify-around lg:justify-between ">
@@ -174,7 +195,7 @@ export default function Header() {
                       Perfil
                     </p>
                   </Link>
-                  <p className="font-medium pt-1 pb-1 transition-all duration-300 rounded-bl-lg rounded-br-lg hover:bg-[#1D1D03] hover:text-white">
+                  <p onClick={handleLogout} className="font-medium pt-1 pb-1 transition-all duration-300 rounded-bl-lg rounded-br-lg hover:bg-[#1D1D03] hover:text-white">
                     Logout
                   </p>
                 </div>
@@ -194,14 +215,11 @@ export default function Header() {
             </div>
           )}
 
-
           <div>
-          <MenuMobile />
+            <MenuMobile />
           </div>
-    
         </div>
       </div>
     </nav>
-  
   );
 }
