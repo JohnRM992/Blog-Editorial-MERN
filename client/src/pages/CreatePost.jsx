@@ -1,19 +1,21 @@
 import React, { useState } from "react";
-import { FileInput, Label } from "flowbite-react";
+import { FileInput} from "flowbite-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
 import {app} from '../firebase'
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import {useNavigate} from 'react-router-dom'
 export default function CreatePost() {
 
   const [file,setFile] = useState(null);
   const [imageUploadProgress , setImageUploadProgress] = useState(null);
   const [imageUploadError , setImageUploadError] = useState(null);
   const [formData , setFormData] = useState({});
+  const [publishError , setPublishError] = useState(null);
 
-
+  const navigate = useNavigate();
   const handleUploadImg = async () => {
 
       try{
@@ -57,13 +59,49 @@ export default function CreatePost() {
   };
 
 
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    try {
+
+        const res = await fetch('/api/post/create' , {
+           method: 'POST',
+           headers: {
+            'Content-Type' : 'application/json'
+           },
+           body: JSON.stringify(formData)
+        });
+        const data = await res.json();
+
+      
+
+        if(!res.ok){
+          setPublishError(data.message);
+          return;
+        }
+        if(res.ok){
+          setPublishError(null);
+          navigate(`/post/${data.slug}`)
+        }
+
+
+    }catch(error) {
+      setPublishError('Algo salió mal')
+    }
+
+  }
+
   return (
     
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center text-3xl my-7 font-semibold">Crear un post</h1>
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className=" gap-4 sm:flex-row justify-between">
           <input
+            onChange={(e) =>
+              setFormData({ ...formData , title: e.target.value})
+            }
             type="text"
             id="title"
             placeholder="Titulo"
@@ -71,7 +109,11 @@ export default function CreatePost() {
             
           ></input>
 
-          <select className="mt-5 w-full rounded-lg border-2 border-[#1D1D03] focus:border-2 focus:border-[#A0C4FF]">
+          <select
+            onChange={(e)=>
+              setFormData({ ...formData , category: e.target.value})
+            }
+           className="mt-5 w-full rounded-lg border-2 border-[#1D1D03] focus:border-2 focus:border-[#A0C4FF]">
             <option value="sincategoria">Seleccionar una categoria</option>
             <option value="noticias">Noticias</option>
             <option value="resena">Reseña</option>
@@ -117,6 +159,10 @@ export default function CreatePost() {
           placeholder="Escribir aqui..."
           className=" h-72 pb-10"
           required
+          onChange={
+            (value) => {
+              setFormData({...formData, content: value});
+            }}
         />
 
         <button
@@ -125,6 +171,10 @@ export default function CreatePost() {
         >
           Publicar
         </button>
+        {publishError && 
+          <p className="text-red-500 font-medium pl-3">
+            *{publishError}</p>
+        }
       </form>
     </div>
   );
