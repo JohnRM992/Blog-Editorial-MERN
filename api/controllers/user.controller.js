@@ -19,8 +19,8 @@ export const updateUser = async (req, res, next) => {
     }
 
     if (req.body.username) {
-        if (req.body.username.length < 7 || req.body.username.length > 20) {
-            return next(errorHandler(400, 'El nombre de usuario debe tener entre 7 y 20 caracteres'));
+        if (req.body.username.length < 7 || req.body.username.length > 30) {
+            return next(errorHandler(400, 'El nombre de usuario debe tener entre 7 y 30 caracteres'));
         }
         if (req.body.username.includes(' ')) {
             return next(errorHandler(400, 'El nombre de usuario no puede contener espacios'));
