@@ -1,6 +1,7 @@
 import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import User from '../models/user.model.js';
+import Post from "../models/post.model.js";
 
 export const test = (req, res) => {
     res.json({ message: 'La API está funcionando' });
@@ -70,4 +71,5 @@ export const signout = async (req,res,next) => {
         next(error);
     }
 
-}
+};
+

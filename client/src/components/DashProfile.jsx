@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Label, Modal } from "flowbite-react";
 import { CircularProgressbar } from "react-circular-progressbar";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { isRouteErrorResponse, Link } from "react-router-dom";
 import "react-circular-progressbar/dist/styles.css";
 import {
   getDownloadURL,
@@ -24,7 +24,7 @@ import {
 
 export default function DashProfile() {
   const dispatch = useDispatch();
-  const { currentUser , error , loading } = useSelector((state) => state.user);
+  const { currentUser, error, loading } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -114,6 +114,7 @@ export default function DashProfile() {
         formData.password === ""
       ) {
         setUpdateUserError("No se hicieron cambios");
+        setIsEditing(false); 
         return;
       }
 
@@ -153,37 +154,36 @@ export default function DashProfile() {
   const handleDeleteUser = async () => {
     setShowModal(false);
     try {
-        dispatch(deleteUserStart());
-        const res = await fetch(`/api/user/delete/${currentUser._id}`, {
-          method: 'DELETE',
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
 
-        });
-        const data = await res.json();
-
-        if(!res.ok) {
-          dispatch(deleteUserFailure(data.message))
-        }else {
-          dispatch(deleteUserSuccess(data))
-        }
+      if (!res.ok) {
+        dispatch(deleteUserFailure(data.message));
+      } else {
+        dispatch(deleteUserSuccess(data));
+      }
     } catch (error) {
-        dispatch(deleteUserFailure(error.message))
+      dispatch(deleteUserFailure(error.message));
     }
   };
 
   const handleLogout = async () => {
-    try{
-        const res = await fetch('/api/user/signout', {
-          method: 'POST',
-        });
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
 
-        const data = await res.json();
-        if(!res.ok){
-          console.log(data.message);
-        } else{
-            dispatch(logoutSuccess());
-        }
-    }catch(error){
-        console.log(error.message);
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(logoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -198,16 +198,16 @@ export default function DashProfile() {
           onChange={handleImageChange}
           ref={filePickerRef}
           hidden
-           disabled={!isEditing}
-             
+          
         />
         <div
-          className="relative w-32 h-32 self-center cursor-pointer shadow-lg overflow-hidden rounded-full"
+          
+          className=" relative w-32 h-32 self-center cursor-pointer shadow-lg overflow-hidden rounded-full"
           onClick={() => filePickerRef.current.click()}
         >
           {imageFileUploadProgress && (
             <CircularProgressbar
-             
+            
               value={imageFileUploadProgress || 0}
               text={`${imageFileUploadProgress}`}
               strokeWidth={5}
@@ -232,12 +232,16 @@ export default function DashProfile() {
           <img
             src={imageFileUrl || currentUser.profilePicture}
             alt="Usuario"
-            
-            className={` rounded-full w-full h-full object-cover border-8 ${
+          
+            className={`rounded-full w-full h-full object-cover border-8 ${
+              
               imageFileUploadProgress &&
               imageFileUploadProgress < 100 &&
               "opacity-50"
-            }`}
+            } ${
+              !isEditing && "opacity-50"
+              }`}
+            
           />
         </div>
         {imageFileUploadError && (
@@ -298,20 +302,25 @@ export default function DashProfile() {
         >
           {isEditing ? "Actualizar" : "Editar"}
         </button>
-        {
-          currentUser.isAdmin && (
-            <Link to={'/create-post'}>
-            <button type="button" className="w-full mt-2 rounded-lg h-10 text-white bg-[#1D1D03] text-lg font-semibold transition-all duration-300 hover:bg-black hover:text-white disabled:opacity-50">Crear post</button>
-            </Link>
-          )
-        }
+        {currentUser.isAdmin && (
+          <Link to={"/create-post"}>
+            <button
+              type="button"
+              className="w-full mt-2 rounded-lg h-10 text-white bg-[#1D1D03] text-lg font-semibold transition-all duration-300 hover:bg-black hover:text-white disabled:opacity-50"
+            >
+              Crear post
+            </button>
+          </Link>
+        )}
       </form>
 
       <div className="text-red-500 font-medium flex justify-between mt-5">
         <span onClick={() => setShowModal(true)} className="cursor-pointer">
           Eliminar cuenta
         </span>
-        <span onClick={handleLogout} className="cursor-pointer">Logout</span>
+        <span onClick={handleLogout} className="cursor-pointer">
+          Logout
+        </span>
       </div>
       {updateUserSuccess && (
         <p className="text-green-500 font-medium pl-3 pt-3">
@@ -322,25 +331,23 @@ export default function DashProfile() {
         <p className="text-red-500 font-medium pl-3 pt-3">*{updateUserError}</p>
       )}
 
-{error && (
-        <p className="text-red-500 font-medium pl-3 pt-3">
-          *{error}
-        </p>
-      )}
+      {error && <p className="text-red-500 font-medium pl-3 pt-3">*{error}</p>}
+      
       <Modal
+        className=" w-96 h-72 rounded-md mx-auto my-auto "
         show={showModal}
         onClose={() => setShowModal(false)}
         popupp
         size="md"
       >
-        <Modal.Header className="bg-[#F7F5E8] border-b-[#1D1D03]" />
-        <Modal.Body className="bg-[#F7F5E8]">
+        <Modal.Header className=" bg-[#F7F5E8] rounded-t-md border-2 border-t-2 border-black shadow-md" />
+        <Modal.Body className="h-64 rounded-b-md border-l-2 border-r-2 border-b-2 border-black bg-[#F7F5E8] shadow-md">
           <div className="text-center">
-            <HiOutlineExclamationCircle className="h-14 w-14 text-[#1D1D03] mb-4 mx-auto" />
+            <HiOutlineExclamationCircle className="mt-3 h-14 w-14 text-[#1D1D03] mb-4 mx-auto" />
             <h3 className="mb-5 text-lg text-[#1D1D03]">
-              ¿Estás seguro de que quieres eliminar tu cuenta?
+              ¿Estás seguro/a de que quieres eliminar tu cuenta?
             </h3>
-            <div className="gap-5">
+            <div className="mb-5">
               <button
                 className="rounded-md w-20 h-10 text-[#1D1D03] bg-gray-300 text-lg font-semibold transition-all duration-300 hover:bg-gray-500 hover:text-white "
                 onClick={() => setShowModal(false)}

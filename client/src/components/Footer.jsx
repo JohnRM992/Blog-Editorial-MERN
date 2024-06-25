@@ -9,7 +9,7 @@ export default function FooterComponent() {
         <div className="">
             {/* REDES */}
          
-            <div className="grid lg:grid-cols-3 gap-3 sm:mt-4 sm:grid-cols-3 sm:gap-6 pt-5">
+            <div className="grid lg:grid-cols-3 gap-3  sm:grid-cols-3 sm:gap-6 pt-5">
                 <div>
                 <Link to='/about'>
                 <h4 className="text-center text-lg font-semibold mb-2">Nosotros</h4>
