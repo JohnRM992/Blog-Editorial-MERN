@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FileInput} from "flowbite-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -6,16 +6,48 @@ import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/st
 import {app} from '../firebase'
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import {useNavigate} from 'react-router-dom'
-export default function CreatePost() {
+import {useSelector} from 'react-redux'
+import {useNavigate , useParams} from 'react-router-dom'
+export default function EditPost() {
 
   const [file,setFile] = useState(null);
   const [imageUploadProgress , setImageUploadProgress] = useState(null);
   const [imageUploadError , setImageUploadError] = useState(null);
   const [formData , setFormData] = useState({});
   const [publishError , setPublishError] = useState(null);
+  const {postId} = useParams();
+
 
   const navigate = useNavigate();
+  const { currentUser }   = useSelector((state) => state.user)
+
+  useEffect(() => {
+
+    try{
+        const fetchPost = async () => {
+            const res = await fetch (`/api/post/getposts?postId=${postId}`)
+            const data = await res.json();
+
+
+            if(!res.ok){
+                console.log(data.message);
+                setPublishError(data.message)
+                return;
+            }
+            if(res.ok){
+                setPublishError(null);
+                setFormData(data.posts[0]);
+            }
+        }
+      
+        
+        fetchPost();
+
+    }catch(error) {
+        console.log(error);
+    }
+
+  }, [postId])
   const handleUploadImg = async () => {
 
       try{
@@ -65,8 +97,8 @@ export default function CreatePost() {
 
     try {
 
-        const res = await fetch('/api/post/create' , {
-           method: 'POST',
+        const res = await fetch(`/api/post/editpost/${formData._id}/${currentUser._id}` , {
+           method: 'PUT',
            headers: {
             'Content-Type' : 'application/json'
            },
@@ -95,23 +127,26 @@ export default function CreatePost() {
   return (
     
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl my-7 font-semibold">Crear post</h1>
+      <h1 className="text-center text-3xl my-7 font-semibold">Editar post</h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className=" gap-4 sm:flex-row justify-between">
           <input
             onChange={(e) =>
               setFormData({ ...formData , title: e.target.value})
             }
+            
             type="text"
             id="title"
             placeholder="Titulo"
             className="rounded-lg w-full border-2 border-[#1D1D03] focus-within:border-2 focus-within:border-[#A0C4FF]"
-            
+            value={formData.title}
           ></input>
 
           <select
+            value={formData.category}
             onChange={(e)=>
               setFormData({ ...formData , category: e.target.value})
+            
             }
            className="mt-5 w-full rounded-lg border-2 border-[#1D1D03] focus:border-2 focus:border-[#A0C4FF]">
             <option value="sincategoria">Seleccionar una categoria</option>
@@ -156,6 +191,7 @@ export default function CreatePost() {
         )}
         <ReactQuill
           theme="snow"
+          value={formData.content}
           placeholder="Escribir aqui..."
           className=" h-72 pb-10"
           required
@@ -169,7 +205,7 @@ export default function CreatePost() {
           type="submit"
           className=" rounded-lg h-10 text-white bg-[#1D1D03] text-lg font-semibold transition-all duration-300 hover:bg-black hover:text-white"
         >
-          Publicar
+          Editar
         </button>
         {publishError && 
           <p className="text-red-500 font-medium pl-3">

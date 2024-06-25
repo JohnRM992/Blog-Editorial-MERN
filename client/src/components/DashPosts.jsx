@@ -110,7 +110,7 @@ export default function DashPosts() {
                     }}>Eliminar</span>
                   </td>
                   <td className="text-center border-[#1D1D03] border-r-2 border-b-2 text-teal-500 hover:underline cursor-pointer">
-                    <Link to={`/update-post/${post._id}`}>
+                    <Link to={`/edit-post/${post._id}`}>
                       Editar
                     </Link>
                   </td>
