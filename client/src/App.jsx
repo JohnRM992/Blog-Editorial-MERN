@@ -13,11 +13,12 @@ import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute';
 import CreatePost from './pages/CreatePost';
 import EditPost from './pages/EditPost';
 import PostPage from './components/PostPage';
+import ScrollTop from './components/ScrollTop';
 
 export default function App() {
   return (
     <BrowserRouter>
-
+    <ScrollTop />
     <Header />
 
     <Routes>
