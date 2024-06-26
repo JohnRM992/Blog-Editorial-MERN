@@ -203,7 +203,7 @@ export default function EditPost() {
 
         <button
           type="submit"
-          className=" rounded-lg h-10 text-white bg-[#1D1D03] text-lg font-semibold transition-all duration-300 hover:bg-black hover:text-white"
+          className="mt-5 mb-5 rounded-lg h-10 text-white bg-[#1D1D03] text-lg font-semibold transition-all duration-300 hover:bg-black hover:text-white"
         >
           Editar
         </button>
