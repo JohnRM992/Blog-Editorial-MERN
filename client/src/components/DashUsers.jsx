@@ -73,7 +73,22 @@ export default function DashUsers() {
 
 
     const handleDeleteUser = async () => {
+          try{
+              const res = await fetch(`/api/user/delete/${userIdToDelete}` , {
+                method: 'DELETE',
+              });
 
+              const data = await res.json();
+              if(res.ok){
+                  setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
+                  setShowModal(false);
+              }else{
+                console.log(data.message);
+              }
+
+          }catch(error){
+              console.log(error);
+          }
     }
 
   return (
@@ -137,7 +152,7 @@ export default function DashUsers() {
         className="w-96 h-72 rounded-md mx-auto my-auto"
         show={showModal}
         onClose={() => setShowModal(false)}
-        popupp
+        popup
         size="md"
       >
         <Modal.Header className="bg-[#F7F5E8] rounded-t-md border-2 border-t-2 border-black shadow-md" />
