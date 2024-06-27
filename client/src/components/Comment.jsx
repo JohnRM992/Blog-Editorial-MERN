@@ -8,9 +8,11 @@ import {useSelector} from 'react-redux' ;
 dayjs.extend(relativeTime); // Extiende dayjs con el plugin relativeTime
 dayjs.locale('es'); // Establece el idioma a español
 
-export default function Comment({ comment , onLike }) {
+export default function Comment({ comment , onLike , onEdit}) {
     const [user, setUser] = useState({});
+    const [isEditing , setIsEditing] = useState(false);
     const {currentUser} = useSelector((state) => state.user)
+    const [editedContent, setEditedContent] = useState(comment.content)
 
     useEffect(() => {
         const getUser = async () => {
@@ -26,6 +28,33 @@ export default function Comment({ comment , onLike }) {
         };
         getUser();
     }, [comment]);
+
+    const handleEdit = () => {
+        setIsEditing(true);
+        setEditedContent(comment.content);
+    }
+
+    const handleSave = async () => {
+            try{
+                    const res = await fetch(`/api/comment/editComment/${comment._id}`, {
+                        method:'PUT',
+                        headers: {
+                            'Content-Type' : 'application/json'
+                        },
+                        body: JSON.stringify({
+                            content: editedContent
+                        })
+                    });
+
+                    if(res.ok){
+                        setIsEditing(false);
+                        onEdit(comment, editedContent);
+                    }
+
+            }catch(error){
+                console.log(error);
+            }
+    }
 
     return (
         <div className="flex items-center p-4 border-b">
@@ -45,21 +74,53 @@ export default function Comment({ comment , onLike }) {
                         {dayjs(comment.createdAt).fromNow()}
                     </span>
                 </div>
-                <p className="text-sm pl-2 sm:text-base mb-2">{comment.content}</p>
-                <div className='flex items-center pt-2 text-sm border-t max-w-fit gap-2'>
-                    <button type="button" onClick={()=>onLike(comment._id)} 
-                    className={`text-gray-400 hover:text-blue-500 ${currentUser && comment.likes.includes(currentUser._id)
-                        && '!text-blue-500'
-                    }`}>
-                    <MdThumbUp className='text-sm' />
 
-                    </button>
-                    <p className='text-gray-400'>
+                {isEditing ? (
+                 <>
+                    <textarea
+                    
+                    className='rounded-md border-2 border-[#1D1D03] w-full focus-within:border-2 focus-within:border-[#A0C4FF] mb-2'
+                    value={editedContent}
+                    onChange={(e)=> setEditedContent(e.target.value)}
+                    >
+
+                    </textarea>
+                    <div className='flex justify-end gap-3 text-sm'>
+                    <button 
+                    onClick={handleSave}
+                    type="button" className='w-20 h-9 rounded-lg bg-[#1D1D03] text-white'>Guardar</button>
+                    <button
+                        onClick={() => setIsEditing(false)}
+                     type="button" className='w-20 h-9 rounded-lg border-2 border-[#1D1D03]'>Cancelar</button>
+                    </div>
+                 </>
+                ) : (
+                    <>
+                    <p className="text-sm pl-2 sm:text-base mb-2">{comment.content}</p>
+                    <div className='flex items-center pt-2 text-sm border-t max-w-fit gap-2'>
+                        <button type="button" onClick={()=>onLike(comment._id)} 
+                        className={`text-gray-400 hover:text-blue-500 ${currentUser && comment.likes.includes(currentUser._id)
+                            && '!text-blue-500'
+                        }`}>
+                        <MdThumbUp className='text-sm' />
+    
+                        </button>
+                        <p className='text-gray-400'>
+                            {
+                                comment.numberOfLikes > 0 && comment.numberOfLikes + " " + (comment.numberOfLikes === 1 ? 'like' : 'likes')
+                            }
+                        </p>
                         {
-                            comment.numberOfLikes > 0 && comment.numberOfLikes + " " + (comment.numberOfLikes === 1 ? 'like' : 'likes')
+                            currentUser && (currentUser._id === comment.userId || currentUser.isAdmin) && (
+                                <button 
+                                onClick={handleEdit}
+                                className='text-gray-400 hover:text-blue-500'>Editar</button>
+                            )
                         }
-                    </p>
-                </div>
+                    </div>
+                    </>
+            )}  
+              
             </div>
         </div>
     );
