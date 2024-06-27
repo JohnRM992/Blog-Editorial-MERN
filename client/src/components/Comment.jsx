@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es'; // Importa el idioma español
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { MdThumbUp } from "react-icons/md";
+import {useSelector} from 'react-redux' ;
 
 dayjs.extend(relativeTime); // Extiende dayjs con el plugin relativeTime
 dayjs.locale('es'); // Establece el idioma a español
 
-export default function Comment({ comment }) {
+export default function Comment({ comment , onLike }) {
     const [user, setUser] = useState({});
+    const {currentUser} = useSelector((state) => state.user)
 
     useEffect(() => {
         const getUser = async () => {
@@ -42,7 +45,21 @@ export default function Comment({ comment }) {
                         {dayjs(comment.createdAt).fromNow()}
                     </span>
                 </div>
-                <p className="text-sm pl-3 sm:text-base mb-2">{comment.content}</p>
+                <p className="text-sm pl-2 sm:text-base mb-2">{comment.content}</p>
+                <div className='flex items-center pt-2 text-sm border-t max-w-fit gap-2'>
+                    <button type="button" onClick={()=>onLike(comment._id)} 
+                    className={`text-gray-400 hover:text-blue-500 ${currentUser && comment.likes.includes(currentUser._id)
+                        && '!text-blue-500'
+                    }`}>
+                    <MdThumbUp className='text-sm' />
+
+                    </button>
+                    <p className='text-gray-400'>
+                        {
+                            comment.numberOfLikes > 0 && comment.numberOfLikes + " " + (comment.numberOfLikes === 1 ? 'like' : 'likes')
+                        }
+                    </p>
+                </div>
             </div>
         </div>
     );
