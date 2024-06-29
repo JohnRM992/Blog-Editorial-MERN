@@ -6,6 +6,7 @@ import { FaUsers } from "react-icons/fa";
 // import { IoMdLogOut } from "react-icons/io";
 import { MdEditDocument } from "react-icons/md";
 import { useSelector , useDispatch } from 'react-redux'
+import { HiOutlineAnnotation } from "react-icons/hi";
 
 export default function DashSidebar() {
   const location = useLocation();
@@ -42,16 +43,25 @@ export default function DashSidebar() {
 
       )},
        {currentUser.isAdmin && (
+         <>
            <Link to='/dashboard?tab=users' as='div'>
            <button className="rounded-md flex pl-5 pt-3 text-[1D1D03] bg-[#F7F5E8] w-11/12 h-14 ml-4 md:ml-2.5   focus:border-black focus:border-2 mb-5">
            <FaUsers className="w-8 h-8" />
                <p className="font-medium pt-1 ml-2">Usuarios</p>
              </button>
            </Link>
+      
+       <Link to='/dashboard?tab=comments' as='div'>
+       <button className="rounded-md flex pl-5 pt-3 text-[1D1D03] bg-[#F7F5E8] w-11/12 h-14 ml-4 md:ml-2.5   focus:border-black focus:border-2 mb-5">
+       <HiOutlineAnnotation  className="w-8 h-8" />
+           <p className="font-medium pt-1 ml-2">Comentarios</p>
+         </button>
+       </Link>
+       </>
 
            
       )}
-     
+   
 
 
       {/* <button className="rounded-md flex pl-5 pt-3 text-[1D1D03] bg-[#F7F5E8] w-11/12 h-14 mt-5 ml-4 md:ml-2.5  mb-5 focus:border-black focus:border-2">
