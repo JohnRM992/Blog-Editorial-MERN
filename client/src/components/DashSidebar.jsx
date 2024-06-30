@@ -7,6 +7,7 @@ import { FaUsers } from "react-icons/fa";
 import { MdEditDocument } from "react-icons/md";
 import { useSelector , useDispatch } from 'react-redux'
 import { HiOutlineAnnotation } from "react-icons/hi";
+import { FaChartPie } from "react-icons/fa6";
 
 export default function DashSidebar() {
   const location = useLocation();
@@ -23,6 +24,20 @@ export default function DashSidebar() {
 
   return (
     <div className="w-full md:w-60  ">
+      {currentUser && currentUser.isAdmin &&
+      (
+        <Link to="/dashboard?tab=dash" as='div'>
+        <button 
+        
+        className="rounded-md flex pl-5 pt-3 text-[1D1D03] bg-[#F7F5E8] w-11/12 h-14 mt-4 ml-4 md:ml-2.5   focus:border-black focus:border-2">
+          <FaChartPie  className="w-8 h-8" />
+          <p className="font-medium pt-1 ml-2">Dashboard</p>
+        </button>
+      </Link>
+      )}
+    
+
+
       <Link to="/dashboard?tab=profile" as='div'>
         <button 
         
