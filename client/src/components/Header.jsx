@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link , useLocation , useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 // import { HiChevronDown } from "react-icons/hi";
 // import { Navbar, MegaMenu } from "flowbite-react";
@@ -16,9 +16,11 @@ export default function Header() {
   // const path = useLocation().pathname;
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownOpen2, setDropdownOpen2] = useState(false);
-
+  const location = useLocation();
+  
   useEffect(() => {
     function handleClickOutside(event) {
       if (!event.target.matches(".dropbtn")) {
@@ -42,6 +44,16 @@ export default function Header() {
     setDropdownOpen(false);
   };
 
+  const [searchTerm,setSearchTerm] = useState('')
+
+  useEffect(() => {
+      const urlParams = new URLSearchParams(location.search);
+      const searchTermFromUrl = urlParams.get('searchTerm');
+
+      if(searchTermFromUrl){
+        setSearchTerm(searchTermFromUrl);
+      }
+  },[location.search])
   const handleLogout = async () => {
     try {
       const res = await fetch("/api/user/signout", {
@@ -59,6 +71,13 @@ export default function Header() {
     }
   };
 
+  const handleSubmit = (e)  => {
+    e.preventDefault();
+      const urlParams = new URLSearchParams(location.search);
+      urlParams.set('searchTerm', searchTerm)
+      const searchQuery = urlParams.toString();
+      navigate(`/search?${searchQuery}`)
+  }
   return (
     <nav className="h-full bg-[#1D1D03] ">
       <div className="flex flex-row justify-around lg:justify-between ">
@@ -78,12 +97,14 @@ export default function Header() {
         </div>
         {/* Inicio de sección de busqueda */}
         <div className="self-center">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="hidden w-72 justify-between lg:flex flex-row bg-white rounded-lg border-2 focus-within:border-2 focus-within:border-[#A0C4FF] text-black">
               <input
                 type="text"
                 placeholder="Buscar..."
                 className="bg-transparent border-0 focus:outline-none focus:border-none focus:ring-0"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               ></input>
               <button>
                 <AiOutlineSearch className="text-black w-5 h-5 my-2" />
